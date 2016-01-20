@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package listener;
+
 import java.awt.*;
 import java.sql.*;
 import java.sql.PreparedStatement;
@@ -15,26 +16,21 @@ import javax.swing.*;
 import javax.swing.table.TableModel;
 import net.proteanit.sql.DbUtils;
 
-
 public class Login1 extends javax.swing.JFrame {
- Connection con = null;
-    ResultSet Result= null;
+
+    Connection con = null;
+    ResultSet Result = null;
     ResultSet Result_table = null;
-    PreparedStatement statement= null ;
-   PreparedStatement statement_table = null;
+    PreparedStatement statement = null;
+    PreparedStatement statement_table = null;
 
     public Login1() {
-     initComponents();
-        con =  Listener.OpenConnection("d:\\databases\\users.sqlite");
-    this.setLocationRelativeTo(this);
-    this.setVisible(true);
-    this.show(true);
-   
+        initComponents();
+        con = Listener.OpenConnection("d:\\databases\\users.sqlite");
+        this.setLocationRelativeTo(this);
+        this.setVisible(true);
+        this.show(true);
 
-   
- 
-    
-       
     }
 
     /**
@@ -48,10 +44,10 @@ public class Login1 extends javax.swing.JFrame {
 
         jPanel1 = new javax.swing.JPanel();
         login = new javax.swing.JButton();
-        password = new javax.swing.JTextField();
         UserName = new javax.swing.JLabel();
         Password = new javax.swing.JLabel();
         username = new javax.swing.JTextField();
+        password = new javax.swing.JPasswordField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -66,6 +62,16 @@ public class Login1 extends javax.swing.JFrame {
 
         Password.setText("Password");
 
+        password.addAncestorListener(new javax.swing.event.AncestorListener() {
+            public void ancestorMoved(javax.swing.event.AncestorEvent evt) {
+            }
+            public void ancestorAdded(javax.swing.event.AncestorEvent evt) {
+                passwordAncestorAdded(evt);
+            }
+            public void ancestorRemoved(javax.swing.event.AncestorEvent evt) {
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -79,9 +85,9 @@ public class Login1 extends javax.swing.JFrame {
                             .addComponent(Password)
                             .addComponent(UserName))
                         .addGap(44, 44, 44)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(username, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(password, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(username, javax.swing.GroupLayout.DEFAULT_SIZE, 138, Short.MAX_VALUE)
+                            .addComponent(password))))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -93,8 +99,8 @@ public class Login1 extends javax.swing.JFrame {
                     .addComponent(UserName))
                 .addGap(26, 26, 26)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(password, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(Password))
+                    .addComponent(Password)
+                    .addComponent(password, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(55, 55, 55)
                 .addComponent(login)
                 .addContainerGap())
@@ -121,38 +127,41 @@ public class Login1 extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void loginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginActionPerformed
-       
-       try
-      {
-          String qeury ="select * from Users where username=? and password=?";
-         String query_table="select * from students ";
-          statement =con.prepareStatement(qeury);
-          statement_table = con.prepareStatement(query_table);
-         statement.setString(1,username.getText());
-          statement.setString(2,password.getText());
-           Result = statement.executeQuery();
-          Result_table = statement_table.executeQuery();
-            
-             
-             
-           if(Result.next())
-           {
-            Account cont = new Account();
-            cont.getfullname().setText(Result.getString("FullName"));
-            cont.getcreatedat().setText(Result.getString("CreatedAt"));
-            /*the methode gettable_students()do return table_students */
-             cont.gettable().setModel( DbUtils.resultSetToTableModel(Result_table));
-            cont.setVisible(true);
-             this.setVisible(false);
-           Result.close();statement.close();
-            Result_table.close();statement_table.close();
-           }else{JOptionPane.showMessageDialog(this,"Insert UserName and PassWord Please ");
-           }
-      
-      }catch(Exception e)
-      {JOptionPane.showMessageDialog(this,"error"+e.getMessage());
-      }
+
+        try {
+            String qeury = "select * from Users where username=? and password=?";
+            String query_table = "select * from students ";
+            statement = con.prepareStatement(qeury);
+            statement_table = con.prepareStatement(query_table);
+            statement.setString(1, username.getText());
+            statement.setString(2, password.getText());
+            Result = statement.executeQuery();
+            Result_table = statement_table.executeQuery();
+
+            if (Result.next()) {
+                Account cont = new Account();
+                cont.getfullname().setText(Result.getString("FullName"));
+                cont.getcreatedat().setText(Result.getString("CreatedAt"));
+                /*the methode gettable_students()do return table_students */
+                cont.gettable().setModel(DbUtils.resultSetToTableModel(Result_table));
+                cont.setVisible(true);
+                this.setVisible(false);
+                Result.close();
+                statement.close();
+                Result_table.close();
+                statement_table.close();
+            } else {
+                JOptionPane.showMessageDialog(this, "Insert UserName and PassWord Please ");
+            }
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "error" + e.getMessage());
+        }
     }//GEN-LAST:event_loginActionPerformed
+
+    private void passwordAncestorAdded(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_passwordAncestorAdded
+        // TODO add your handling code here:
+    }//GEN-LAST:event_passwordAncestorAdded
 
     /**
      * @param args the command line arguments
@@ -194,7 +203,7 @@ public class Login1 extends javax.swing.JFrame {
     private javax.swing.JLabel UserName;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JButton login;
-    private javax.swing.JTextField password;
+    private javax.swing.JPasswordField password;
     private javax.swing.JTextField username;
     // End of variables declaration//GEN-END:variables
 }

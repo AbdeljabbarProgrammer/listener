@@ -21,7 +21,7 @@ ResultSet re_set = null;
         con = Listener.OpenConnection("d:\\databases\\users.sqlite");
         setLocationRelativeTo(this);
         this.setVisible(true);
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 public javax.swing.JTextField getfullname()
 {
@@ -46,7 +46,7 @@ public javax.swing.JButton getsave()
         jLabel1 = new javax.swing.JLabel();
         fullname = new javax.swing.JTextField();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
 
         jLabel2.setText("Cpecialty");
 
@@ -140,14 +140,11 @@ public javax.swing.JButton getsave()
             }
        }   
        
-       
+      
        
                       
     }//GEN-LAST:event_saveActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
    
   
     // Variables declaration - do not modify//GEN-BEGIN:variables

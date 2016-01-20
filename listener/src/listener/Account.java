@@ -119,13 +119,13 @@ ResultSet r_set = null;
                         .addGap(66, 66, 66)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 294, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(20, 20, 20)
-                        .addComponent(add)
-                        .addGap(18, 18, 18)
-                        .addComponent(delete)
+                        .addGap(8, 8, 8)
+                        .addComponent(add, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(33, 33, 33)
-                        .addComponent(edit)
-                        .addGap(32, 32, 32)
+                        .addComponent(delete)
+                        .addGap(18, 18, 18)
+                        .addComponent(edit, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(33, 33, 33)
                         .addComponent(logout)))
                 .addGap(20, 20, 20))
         );
@@ -147,11 +147,12 @@ ResultSet r_set = null;
                 .addGap(51, 51, 51)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(58, 58, 58)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(logout)
-                    .addComponent(edit)
-                    .addComponent(add)
-                    .addComponent(delete, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(delete, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(logout)
+                        .addComponent(edit)
+                        .addComponent(add)))
                 .addContainerGap())
         );
 
@@ -208,13 +209,18 @@ ResultSet r_set = null;
          try
             {
                 int row =table.getSelectedRow();
-                int column = table.getSelectedColumn();
-                String idtable = table.getModel().getValueAt(row,0).toString();
+               int com = table.getSelectedColumn();
+                String fullname = table.getModel().getValueAt(row,1).toString();
+                     String specialty = table.getModel().getValueAt(row,2).toString();
+//                Edit edit = new Edit();
+//                edit.getup_fullname().setText(idtable);
                
-//               String qeury ="update students set id='"+idtable+"',fullname= '"+fullname+"',specialty='"+specialty+"',createdAt='"+createdAt+"'";
-//                pdst = con.prepareStatement(qeury);
-                pdst.execute();
-                
+             String qeury ="update students set FullName='"+fullname+"',specailty   ='"+specialty+"'" ;
+               pdst = con.prepareStatement(qeury);
+             r_set = pdst.executeQuery();
+               
+               DefaultTableModel  model = (DefaultTableModel)table.getModel();
+               model.isCellEditable(row, com);
             }
            catch(Exception e)
            {
