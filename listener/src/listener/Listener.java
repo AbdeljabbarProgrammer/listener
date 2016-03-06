@@ -1,40 +1,35 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package listener;
 
-/**
- *
- * @author FTECARE
- */
 import java.sql.*;
 import javax.swing.JOptionPane;
 
 public class Listener 
 {
-    // public  Connection Con;
-        public static Connection OpenConnection(String dbPath)
+  
+        public static Connection OpenConnection(/*String dbPath*/)
         {
             try
             {
-                       Class.forName("org.sqlite.JDBC");
-                      Connection Con = DriverManager.getConnection("jdbc:sqlite:\\" + dbPath);
-                  
+                      
+                        Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+                        Connection Con = DriverManager.getConnection("jdbc:sqlserver://FTECARE-PC\\SQLEXPRESS;Namedatabase =gamadev;","sa","2016");
+                        JOptionPane.showMessageDialog(null,"good");
+                      
                        return Con;
             }
 
             catch(Exception e)
             {
-                JOptionPane.showMessageDialog(null,"Sorry we can't connect to the database right now. Please check your connection.");
+                JOptionPane.showMessageDialog(null,e.getMessage());
             }
             return null;  
         }
+         
 
-    
-   
 }
 
+
+   
     
 

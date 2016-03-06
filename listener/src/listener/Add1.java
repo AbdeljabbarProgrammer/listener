@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package listener;
 
 import static java.lang.Math.E;
@@ -18,10 +14,10 @@ ResultSet re_set = null;
  Connection con =null;
     public Add1() {
         initComponents();
-        con = Listener.OpenConnection("d:\\databases\\users.sqlite");
+        con = Listener.OpenConnection(/*"d:\\databases\\users.sqlite"*/);
         setLocationRelativeTo(this);
         this.setVisible(true);
-//        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+       this.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
     }
 public javax.swing.JTextField getfullname()
 {
@@ -116,7 +112,7 @@ public javax.swing.JButton getsave()
     private void saveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveActionPerformed
          try
        {
-            String query ="insert into students (FullName,specialty)values('"+fullname.getText()+"','"+specialty.getText()+"')";
+            String query ="insert into students (FullName,specialty,User_id)values('"+fullname.getText()+"','"+specialty.getText()+"','"+Login1.user_ID+"')";
             pre_sta = con.prepareStatement(query);
             pre_sta.execute();
             
@@ -127,6 +123,7 @@ public javax.swing.JButton getsave()
        }
        catch(Exception e)
        {
+           JOptionPane.showMessageDialog(this,e.getMessage());
        }
        finally
        {

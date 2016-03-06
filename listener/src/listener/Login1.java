@@ -23,10 +23,11 @@ public class Login1 extends javax.swing.JFrame {
     ResultSet Result_table = null;
     PreparedStatement statement = null;
     PreparedStatement statement_table = null;
+    public static String user_ID ;
 
     public Login1() {
         initComponents();
-        con = Listener.OpenConnection("d:\\databases\\users.sqlite");
+        con = Listener.OpenConnection();
         this.setLocationRelativeTo(this);
         this.setVisible(true);
         this.show(true);
@@ -42,12 +43,15 @@ public class Login1 extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jSplitPane1 = new javax.swing.JSplitPane();
+        jSplitPane2 = new javax.swing.JSplitPane();
         jPanel1 = new javax.swing.JPanel();
         login = new javax.swing.JButton();
         UserName = new javax.swing.JLabel();
         Password = new javax.swing.JLabel();
         username = new javax.swing.JTextField();
         password = new javax.swing.JPasswordField();
+        Signup = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -72,6 +76,15 @@ public class Login1 extends javax.swing.JFrame {
             }
         });
 
+        Signup.setText("Sign up");
+        Signup.setMaximumSize(new java.awt.Dimension(57, 23));
+        Signup.setMinimumSize(new java.awt.Dimension(57, 23));
+        Signup.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                SignupActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -79,15 +92,18 @@ public class Login1 extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(login)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(Signup, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(login, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(Password)
                             .addComponent(UserName))
                         .addGap(44, 44, 44)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(username, javax.swing.GroupLayout.DEFAULT_SIZE, 138, Short.MAX_VALUE)
-                            .addComponent(password))))
+                            .addComponent(username)
+                            .addComponent(password, javax.swing.GroupLayout.DEFAULT_SIZE, 138, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -95,15 +111,17 @@ public class Login1 extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(username, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(UserName))
+                    .addComponent(UserName)
+                    .addComponent(username, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(26, 26, 26)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(Password)
-                    .addComponent(password, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(password, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(55, 55, 55)
-                .addComponent(login)
-                .addContainerGap())
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(login, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(Signup, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -129,20 +147,25 @@ public class Login1 extends javax.swing.JFrame {
     private void loginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginActionPerformed
 
         try {
-            String qeury = "select * from Users where username=? and password=?";
-            String query_table = "select * from students ";
+            String qeury = "select* from Users where username=? and password=? ";
+          
             statement = con.prepareStatement(qeury);
-            statement_table = con.prepareStatement(query_table);
+           
             statement.setString(1, username.getText());
             statement.setString(2, password.getText());
             Result = statement.executeQuery();
-            Result_table = statement_table.executeQuery();
-
-            if (Result.next()) {
+            
+            if (Result.next())
+            {
                 Account cont = new Account();
                 cont.getfullname().setText(Result.getString("FullName"));
                 cont.getcreatedat().setText(Result.getString("CreatedAt"));
-                /*the methode gettable_students()do return table_students */
+                String query_table = "select * from students  where  students.User_id =  ? ";
+                statement_table = con.prepareStatement(query_table);
+               user_ID    = Result.getString("id");
+                statement_table.setString(1, user_ID);
+                Result_table = statement_table.executeQuery();
+                 /*the methode gettable_students()do return table_students */
                 cont.gettable().setModel(DbUtils.resultSetToTableModel(Result_table));
                 cont.setVisible(true);
                 this.setVisible(false);
@@ -150,11 +173,12 @@ public class Login1 extends javax.swing.JFrame {
                 statement.close();
                 Result_table.close();
                 statement_table.close();
-            } else {
+            } else 
+            {
                 JOptionPane.showMessageDialog(this, "Insert UserName and PassWord Please ");
             }
-
-        } catch (Exception e) {
+        } catch (Exception e) 
+        {
             JOptionPane.showMessageDialog(this, "error" + e.getMessage());
         }
     }//GEN-LAST:event_loginActionPerformed
@@ -163,9 +187,12 @@ public class Login1 extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_passwordAncestorAdded
 
-    /**
-     * @param args the command line arguments
-     */
+    private void SignupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SignupActionPerformed
+       
+        Create_Account ca = new Create_Account();
+        ca.setVisible(true);
+    }//GEN-LAST:event_SignupActionPerformed
+
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -200,8 +227,11 @@ public class Login1 extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel Password;
+    private javax.swing.JButton Signup;
     private javax.swing.JLabel UserName;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JSplitPane jSplitPane1;
+    private javax.swing.JSplitPane jSplitPane2;
     private javax.swing.JButton login;
     private javax.swing.JPasswordField password;
     private javax.swing.JTextField username;
